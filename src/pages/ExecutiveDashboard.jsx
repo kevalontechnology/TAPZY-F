@@ -17,8 +17,9 @@ const ExecutiveDashboard = () => {
         const curMonth = new Date().getMonth() + 1;
         const curYear = new Date().getFullYear();
 
-        const [dbRes, incRes, leadRes] = await Promise.all([
+        const [dbRes, tarRes, incRes, leadRes] = await Promise.all([
           api.get('/reports/dashboard'),
+          api.get(`/targets?month=${curMonth}&year=${curYear}`),
           api.get(`/incentives?month=${curMonth}&year=${curYear}`),
           api.get('/leads?status=Follow-up&limit=5'),
         ]);
@@ -26,6 +27,20 @@ const ExecutiveDashboard = () => {
         setDashboardData(dbRes.data);
         if (incRes.incentives && incRes.incentives.length > 0) {
           setTargetInfo(incRes.incentives[0]);
+        } else if (tarRes.targets && tarRes.targets.length > 0) {
+          setTargetInfo({
+            targetQty: tarRes.targets[0].targetCards,
+            totalSold: 0,
+            extraSold: 0,
+            earnedAmount: 0,
+          });
+        } else {
+          setTargetInfo({
+            targetQty: 0,
+            totalSold: 0,
+            extraSold: 0,
+            earnedAmount: 0,
+          });
         }
         setLeads(leadRes.leads || []);
       } catch (err) {
@@ -41,10 +56,10 @@ const ExecutiveDashboard = () => {
     return <div className="p-8 text-center text-slate-400">Loading Executive Dashboard...</div>;
   }
 
-  const sold = targetInfo?.totalSold || 112;
-  const target = targetInfo?.targetQty || 100;
-  const extraSold = targetInfo?.extraSold || (sold > target ? sold - target : 0);
-  const earnedIncentive = targetInfo?.earnedAmount || 360;
+  const sold = targetInfo?.totalSold || 0;
+  const target = targetInfo?.targetQty || 0;
+  const extraSold = targetInfo?.extraSold || 0;
+  const earnedIncentive = targetInfo?.earnedAmount || 0;
 
   return (
     <div className="space-y-8">

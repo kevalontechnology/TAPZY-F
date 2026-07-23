@@ -1,8 +1,8 @@
 import React from 'react';
 import { Target, Award, TrendingUp, Zap } from 'lucide-react';
 
-const ExecutiveTargetWidget = ({ target = 100, sold = 112, extraSold = 12, incentiveEarned = 360 }) => {
-  const percentage = Math.min(100, Math.round((sold / (target || 1)) * 100));
+const ExecutiveTargetWidget = ({ target = 0, sold = 0, extraSold = 0, incentiveEarned = 0 }) => {
+  const percentage = target > 0 ? Math.min(100, Math.round((sold / target) * 100)) : 0;
   const remaining = Math.max(0, target - sold);
 
   return (
