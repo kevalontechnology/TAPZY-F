@@ -6,10 +6,13 @@ import { CreditCard, Plus, CheckCircle2, Clock } from 'lucide-react';
 import api from '../services/api';
 import { useSelector } from 'react-redux';
 
+import Button from '../components/Button';
+
 const PaymentsPage = () => {
   const [payments, setPayments] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
@@ -42,12 +45,15 @@ const PaymentsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       await api.post('/payments', formData);
       setIsModalOpen(false);
       fetchData();
       alert('Payment collection recorded successfully!');
     } catch (err) {
       alert(err.message || 'Error recording payment');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -205,12 +211,9 @@ const PaymentsPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Save Payment
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

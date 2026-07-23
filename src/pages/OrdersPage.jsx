@@ -5,12 +5,14 @@ import Badge from '../components/Badge';
 import { Plus, ShoppingCart, CheckCircle, FileText, QrCode } from 'lucide-react';
 import api from '../services/api';
 import { useSelector } from 'react-redux';
+import Button from '../components/Button';
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [clients, setClients] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
@@ -80,6 +82,7 @@ const OrdersPage = () => {
       if (!clientId) return alert('Select client');
       if (orderItems.some((i) => !i.productId)) return alert('Select products');
 
+      setSubmitting(true);
       await api.post('/orders', {
         clientId,
         items: orderItems,
@@ -92,18 +95,23 @@ const OrdersPage = () => {
       alert('Order created successfully!');
     } catch (err) {
       alert(err.message || 'Failed to create order');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleUpdateStatus = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       await api.put(`/orders/${selectedOrder._id}/status`, statusUpdate);
       setIsStatusModalOpen(false);
       fetchData();
       alert(`Order status updated to ${statusUpdate.status}`);
     } catch (err) {
       alert(err.message || 'Status update failed');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -324,12 +332,9 @@ const OrdersPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Submit Order
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>
@@ -362,12 +367,9 @@ const OrdersPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Update Stage
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

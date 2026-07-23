@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login, clearError } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Lock, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import Button from '../components/Button';
 
 const Login = () => {
   const [email, setEmail] = useState('superadmin@kevalon.com');
@@ -85,14 +86,14 @@ const Login = () => {
             </div>
           </div>
 
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-all disabled:opacity-50"
+            loading={loading}
+            icon={ArrowRight}
+            className="w-full py-3 text-sm font-bold"
           >
-            {loading ? 'Authenticating...' : 'Sign In to Dashboard'}
-            <ArrowRight className="h-4 w-4" />
-          </button>
+            Sign In to Dashboard
+          </Button>
         </form>
 
         {/* Demo Fast Logins */}

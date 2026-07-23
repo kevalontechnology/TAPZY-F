@@ -4,10 +4,12 @@ import Modal from '../components/Modal';
 import Badge from '../components/Badge';
 import { Plus, UserCheck, Phone, Calendar, CheckCircle, RefreshCw } from 'lucide-react';
 import api from '../services/api';
+import Button from '../components/Button';
 
 const LeadsPage = () => {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
@@ -51,6 +53,7 @@ const LeadsPage = () => {
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       if (selectedLead) {
         await api.put(`/leads/${selectedLead._id}`, formData);
       } else {
@@ -61,12 +64,15 @@ const LeadsPage = () => {
       fetchLeads();
     } catch (err) {
       alert(err.message || 'Error saving lead');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleConvertSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       await api.post(`/leads/${selectedLead._id}/convert`, convertData);
       setIsConvertModalOpen(false);
       setSelectedLead(null);
@@ -74,6 +80,8 @@ const LeadsPage = () => {
       alert('Lead successfully converted into Client!');
     } catch (err) {
       alert(err.message || 'Error converting lead');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -276,12 +284,9 @@ const LeadsPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Save Lead Details
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>
@@ -337,12 +342,9 @@ const LeadsPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-emerald-600 text-xs font-bold text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/30"
-            >
+            <Button type="submit" variant="success" loading={submitting}>
               Convert to Active Client
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

@@ -5,6 +5,7 @@ import Badge from '../components/Badge';
 import { Plus, Building2, ExternalLink, Phone, Mail, MapPin, QrCode } from 'lucide-react';
 import api from '../services/api';
 import { useSelector } from 'react-redux';
+import Button from '../components/Button';
 
 const ClientsPage = () => {
   const [clients, setClients] = useState([]);
@@ -47,9 +48,12 @@ const ClientsPage = () => {
     fetchClients();
   }, []);
 
+  const [submitting, setSubmitting] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       if (selectedClient) {
         await api.put(`/clients/${selectedClient._id}`, formData);
       } else {
@@ -60,6 +64,8 @@ const ClientsPage = () => {
       fetchClients();
     } catch (err) {
       alert(err.message || 'Error saving client');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -316,12 +322,9 @@ const ClientsPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Save Client Profile
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

@@ -5,9 +5,12 @@ import Badge from '../components/Badge';
 import { Users, Plus, Edit, Trash2 } from 'lucide-react';
 import api from '../services/api';
 
+import Button from '../components/Button';
+
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -39,6 +42,7 @@ const UsersPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       if (selectedUser) {
         await api.put(`/users/${selectedUser._id}`, formData);
       } else {
@@ -50,6 +54,8 @@ const UsersPage = () => {
       alert('User record saved!');
     } catch (err) {
       alert(err.message || 'Error saving user');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -193,12 +199,9 @@ const UsersPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Save User
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

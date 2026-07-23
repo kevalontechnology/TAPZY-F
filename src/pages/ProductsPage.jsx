@@ -6,9 +6,12 @@ import { Plus, Package, Edit, Trash2 } from 'lucide-react';
 import api from '../services/api';
 import { useSelector } from 'react-redux';
 
+import Button from '../components/Button';
+
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -44,6 +47,7 @@ const ProductsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       if (selectedProduct) {
         await api.put(`/products/${selectedProduct._id}`, formData);
       } else {
@@ -54,6 +58,8 @@ const ProductsPage = () => {
       fetchProducts();
     } catch (err) {
       alert(err.message || 'Error saving product');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -237,12 +243,9 @@ const ProductsPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Save Product
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>

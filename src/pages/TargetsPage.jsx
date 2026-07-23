@@ -6,10 +6,13 @@ import { Target, Plus } from 'lucide-react';
 import api from '../services/api';
 import { useSelector } from 'react-redux';
 
+import Button from '../components/Button';
+
 const TargetsPage = () => {
   const [targets, setTargets] = useState([]);
   const [executives, setExecutives] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
@@ -45,12 +48,15 @@ const TargetsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitting(true);
       await api.post('/targets', formData);
       setIsModalOpen(false);
       fetchData();
       alert('Monthly target assigned successfully!');
     } catch (err) {
       alert(err.message || 'Target assignment failed');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -187,12 +193,9 @@ const TargetsPage = () => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-600/30"
-            >
+            <Button type="submit" loading={submitting}>
               Assign Target
-            </button>
+            </Button>
           </div>
         </form>
       </Modal>
