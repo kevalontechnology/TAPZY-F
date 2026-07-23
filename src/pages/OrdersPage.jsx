@@ -254,7 +254,7 @@ const OrdersPage = () => {
           >
             <Eye className="h-3.5 w-3.5" /> Details
           </button>
-          {row.status !== 'Cancelled' && (
+          {['super_admin', 'admin'].includes(user?.role) && row.status !== 'Cancelled' && (
             <button
               onClick={() => {
                 setSelectedOrder(row);
@@ -280,7 +280,7 @@ const OrdersPage = () => {
               }}
               className="text-xs font-bold text-rose-400 hover:underline"
             >
-              Cancel
+              Cancel Order
             </button>
           )}
         </div>
