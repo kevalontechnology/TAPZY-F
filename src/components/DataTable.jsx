@@ -22,7 +22,7 @@ const DataTable = ({
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/60 glass-card overflow-hidden shadow-xl">
       {/* Controls Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 sm:p-4 border-b border-slate-800">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
@@ -30,7 +30,7 @@ const DataTable = ({
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder={searchPlaceholder}
-            className="w-full rounded-xl bg-slate-800/80 border border-slate-700 pl-9 pr-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full rounded-xl bg-slate-800/80 border border-slate-700 pl-9 pr-4 py-2 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
 
@@ -41,12 +41,12 @@ const DataTable = ({
       </div>
 
       {/* Table Content */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm text-slate-300">
-          <thead className="bg-slate-800/80 uppercase text-[11px] font-semibold text-slate-400 tracking-wider">
+      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700">
+        <table className="w-full text-left text-xs sm:text-sm text-slate-300 min-w-[600px]">
+          <thead className="bg-slate-800/80 uppercase text-[10px] sm:text-[11px] font-semibold text-slate-400 tracking-wider">
             <tr>
               {columns.map((col, idx) => (
-                <th key={idx} className="px-6 py-3.5">
+                <th key={idx} className="px-3.5 sm:px-6 py-3">
                   {col.header}
                 </th>
               ))}
@@ -57,7 +57,7 @@ const DataTable = ({
               data.map((row, rowIdx) => (
                 <tr key={rowIdx} className="hover:bg-slate-800/40 transition-colors">
                   {columns.map((col, colIdx) => (
-                    <td key={colIdx} className="px-6 py-4 whitespace-nowrap">
+                    <td key={colIdx} className="px-3.5 sm:px-6 py-3 sm:py-4">
                       {col.render ? col.render(row) : row[col.accessor]}
                     </td>
                   ))}
@@ -76,7 +76,7 @@ const DataTable = ({
 
       {/* Pagination Footer */}
       {pages > 1 && (
-        <div className="flex items-center justify-between px-6 py-3 border-t border-slate-800 bg-slate-900/40">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-slate-800 bg-slate-900/40">
           <span className="text-xs text-slate-400">
             Page {page} of {pages}
           </span>
