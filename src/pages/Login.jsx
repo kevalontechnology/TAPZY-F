@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, clearError } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Lock, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
 import Button from '../components/Button';
 
 const Login = () => {
-  const [email, setEmail] = useState('superadmin@kevalon.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,11 +20,6 @@ const Login = () => {
     if (res.meta.requestStatus === 'fulfilled') {
       navigate('/dashboard');
     }
-  };
-
-  const handleDemoFill = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
   };
 
   return (
@@ -95,33 +90,6 @@ const Login = () => {
             Sign In to Dashboard
           </Button>
         </form>
-
-        {/* Demo Fast Logins */}
-        <div className="pt-4 border-t border-slate-800">
-          <p className="text-[11px] font-bold text-slate-400 uppercase text-center mb-3">
-            Quick Demo Role Login
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => handleDemoFill('superadmin@kevalon.com', 'admin123')}
-              className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-2 text-[11px] font-semibold text-indigo-300 hover:bg-indigo-500/20 transition-colors"
-            >
-              Super Admin
-            </button>
-            <button
-              onClick={() => handleDemoFill('admin@kevalon.com', 'admin123')}
-              className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-2 text-[11px] font-semibold text-purple-300 hover:bg-purple-500/20 transition-colors"
-            >
-              Admin
-            </button>
-            <button
-              onClick={() => handleDemoFill('rahul@kevalon.com', 'exec123')}
-              className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2 text-[11px] font-semibold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
-            >
-              Executive
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
