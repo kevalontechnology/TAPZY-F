@@ -29,10 +29,18 @@ const TargetsPage = () => {
       setLoading(true);
       const [tarRes, userRes] = await Promise.all([
         api.get('/targets'),
-        api.get('/users?role=executive'),
+        api.get('/users'),
       ]);
       setTargets(tarRes.targets || []);
-      setExecutives(userRes.users || []);
+      
+      const allUsers = userRes.users || [];
+      const execList = allUsers.filter((u) => u.role === 'executive');
+      const finalExecs = execList.length > 0 ? execList : allUsers;
+      setExecutives(finalExecs);
+      
+      if (finalExecs.length > 0 && !formData.executiveId) {
+        setFormData((prev) => ({ ...prev, executiveId: finalExecs[0]._id }));
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -43,6 +51,27 @@ const TargetsPage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleOpenAssignModal = async () => {
+    try {
+      const userRes = await api.get('/users');
+      const allUsers = userRes.users || [];
+      const execList = allUsers.filter((u) => u.role === 'executive');
+      const finalExecs = execList.length > 0 ? execList : allUsers;
+      setExecutives(finalExecs);
+
+      setFormData({
+        executiveId: finalExecs.length > 0 ? finalExecs[0]._id : '',
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+        targetCards: 100,
+        notes: '',
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    setIsModalOpen(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -124,16 +153,7 @@ const TargetsPage = () => {
         </div>
         {['super_admin', 'admin'].includes(user?.role) && (
           <button
-            onClick={() => {
-              setFormData({
-                executiveId: '',
-                month: new Date().getMonth() + 1,
-                year: new Date().getFullYear(),
-                targetCards: 100,
-                notes: '',
-              });
-              setIsModalOpen(true);
-            }}
+            onClick={handleOpenAssignModal}
             className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-indigo-600/30 hover:bg-indigo-500 transition-colors"
           >
             <Plus className="h-4 w-4" /> Assign Monthly Target
@@ -151,7 +171,7 @@ const TargetsPage = () => {
               required
               value={formData.executiveId}
               onChange={(e) => setFormData({ ...formData, executiveId: e.target.value })}
-              className="w-full rounded-xl bg-slate-800 border border-slate-700 px-3 py-2 text-xs text-white"
+              className="w-full rounded-xl bg-slate-800 border border-slate-700 px-3 py-2 text-xs text-white font-bold"
             >
               <option value="">-- Choose Executive --</option>
               {executives.map((exec) => (
@@ -160,6 +180,9 @@ const TargetsPage = () => {
                 </option>
               ))}
             </select>
+            {executives.length === 0 && (
+              <p className="text-[11px] text-amber-400 mt-1">No sales executives found. Create executive accounts in User Management.</p>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-4">
