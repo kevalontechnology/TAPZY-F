@@ -5,7 +5,6 @@ import Badge from '../components/Badge';
 import { Target, Plus } from 'lucide-react';
 import api from '../services/api';
 import { useSelector } from 'react-redux';
-
 import Button from '../components/Button';
 
 const TargetsPage = () => {
@@ -64,7 +63,12 @@ const TargetsPage = () => {
     {
       header: 'Executive Name',
       accessor: 'executive',
-      render: (row) => <span className="font-bold text-white text-xs">{row.executive?.name}</span>,
+      render: (row) => (
+        <div>
+          <p className="font-bold text-white text-xs">{row.executive?.name || 'Unassigned'}</p>
+          <p className="text-[10px] text-slate-400">{row.executive?.email}</p>
+        </div>
+      ),
     },
     {
       header: 'Month & Year',
@@ -76,14 +80,33 @@ const TargetsPage = () => {
       ),
     },
     {
-      header: 'Assigned Goal Cards',
+      header: 'Assigned Goal',
       accessor: 'targetCards',
       render: (row) => <span className="font-bold text-emerald-400 text-xs">{row.targetCards} Cards</span>,
     },
     {
-      header: 'Status',
+      header: 'Cards Sold Progress',
+      accessor: 'totalSoldCards',
+      render: (row) => {
+        const sold = row.totalSoldCards || 0;
+        const goal = row.targetCards || 1;
+        const pct = Math.round((sold / goal) * 100);
+        return (
+          <div>
+            <span className="font-bold text-white text-xs">{sold} / {goal} Cards</span>
+            <span className="text-[10px] text-indigo-400 ml-1 font-semibold">({pct}%)</span>
+          </div>
+        );
+      },
+    },
+    {
+      header: 'Real-time Status',
       accessor: 'status',
-      render: (row) => <Badge variant={row.status === 'Achieved' ? 'success' : 'primary'}>{row.status}</Badge>,
+      render: (row) => (
+        <Badge variant={row.status === 'Achieved' ? 'success' : 'amber'}>
+          {row.status === 'Achieved' ? '🎯 Target Achieved' : '⏳ In Progress'}
+        </Badge>
+      ),
     },
     {
       header: 'Assigned By',
@@ -97,7 +120,7 @@ const TargetsPage = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight">Monthly Target Allocation</h1>
-          <p className="text-xs text-slate-400 mt-1">Assign monthly card sales quotas for sales executives</p>
+          <p className="text-xs text-slate-400 mt-1">Assign monthly card sales quotas and track live executive progress</p>
         </div>
         {['super_admin', 'admin'].includes(user?.role) && (
           <button

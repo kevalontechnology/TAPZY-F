@@ -37,7 +37,7 @@ const Sidebar = () => {
     { label: 'Inventory & Stock', path: '/inventory', icon: Boxes, roles: ['super_admin', 'admin'] },
     { label: 'Orders & NFC Config', path: '/orders', icon: ShoppingCart, roles: ['super_admin', 'admin', 'executive'] },
     { label: 'Payments', path: '/payments', icon: CreditCard, roles: ['super_admin', 'admin', 'executive'] },
-    { label: 'GST Invoices', path: '/invoices', icon: FileText, roles: ['super_admin', 'admin', 'executive'] },
+    { label: 'GST Invoices', path: '/invoices', icon: FileText, roles: ['super_admin'] },
     { label: 'Monthly Targets', path: '/targets', icon: Target, roles: ['super_admin', 'admin', 'executive'] },
     { label: 'Incentive Matrix', path: '/incentives', icon: Gift, roles: ['super_admin', 'admin', 'executive'] },
     { label: 'Reports & Analytics', path: '/reports', icon: BarChart3, roles: ['super_admin', 'admin'] },

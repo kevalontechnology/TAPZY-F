@@ -517,21 +517,28 @@ const OrdersPage = () => {
             </div>
 
             {/* Financial Totals */}
-            <div className="rounded-xl bg-slate-800/60 p-4 border border-slate-700/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <p className="text-slate-400">Order Date: <span className="text-white font-semibold">{new Date(orderDetailData.order.createdAt).toLocaleString()}</span></p>
-                {orderDetailData.order.nfcDetails && (
-                  <p className="text-indigo-400 mt-1 font-semibold">NFC Encoding: {orderDetailData.order.nfcDetails}</p>
-                )}
+            <div className="rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-5 border border-slate-700/80 shadow-xl space-y-3">
+              <div className="flex items-center justify-between text-slate-300 text-xs border-b border-slate-700/60 pb-2">
+                <span className="font-semibold text-slate-400">Order Placed Date:</span>
+                <span className="font-bold text-white">{new Date(orderDetailData.order.createdAt).toLocaleString('en-IN')}</span>
               </div>
-              <div className="text-right space-y-1 w-full sm:w-auto">
-                <div className="flex justify-between sm:justify-end gap-6 text-slate-400"><span>Subtotal:</span><span>₹{orderDetailData.order.subTotal?.toFixed(2)}</span></div>
-                <div className="flex justify-between sm:justify-end gap-6 text-slate-400"><span>GST (18%):</span><span>₹{orderDetailData.order.totalGst?.toFixed(2)}</span></div>
-                {orderDetailData.order.discount > 0 && (
-                  <div className="flex justify-between sm:justify-end gap-6 text-slate-400"><span>Discount:</span><span>-₹{orderDetailData.order.discount?.toFixed(2)}</span></div>
-                )}
-                <div className="flex justify-between sm:justify-end gap-6 text-sm font-extrabold text-emerald-400 border-t border-slate-700 pt-1">
-                  <span>Grand Total:</span><span>₹{orderDetailData.order.grandTotal?.toFixed(2)}</span>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center pt-2">
+                <div className="rounded-xl bg-slate-800/80 p-3 border border-slate-700">
+                  <p className="text-[10px] uppercase font-bold text-slate-400">Total Amount (Subtotal)</p>
+                  <p className="text-base font-bold text-white mt-1">₹{orderDetailData.order.subTotal?.toFixed(2)}</p>
+                </div>
+                <div className="rounded-xl bg-slate-800/80 p-3 border border-slate-700">
+                  <p className="text-[10px] uppercase font-bold text-slate-400">GST (18% Tax)</p>
+                  <p className="text-base font-bold text-purple-400 mt-1">+₹{orderDetailData.order.totalGst?.toFixed(2)}</p>
+                </div>
+                <div className="rounded-xl bg-slate-800/80 p-3 border border-slate-700">
+                  <p className="text-[10px] uppercase font-bold text-slate-400">Discount</p>
+                  <p className="text-base font-bold text-amber-400 mt-1">-₹{orderDetailData.order.discount?.toFixed(2)}</p>
+                </div>
+                <div className="rounded-xl bg-emerald-500/15 p-3 border border-emerald-500/30">
+                  <p className="text-[10px] uppercase font-bold text-emerald-400">Grand Total Amount</p>
+                  <p className="text-lg font-extrabold text-emerald-400 mt-1">₹{orderDetailData.order.grandTotal?.toFixed(2)}</p>
                 </div>
               </div>
             </div>
